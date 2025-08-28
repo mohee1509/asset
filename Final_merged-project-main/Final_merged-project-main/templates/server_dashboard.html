@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="5">
+  <title>Server Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    main { flex: 1; }
+    .os-badge-linux { background-color: #28a745; }
+    .os-badge-windows { background-color: #007bff; }
+    .os-badge-mac { background-color: #6f42c1; }
+  </style>
+</head>
+<body class="bg-light">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="#">QSAgent Server Dashboard</a>
+      <button class="btn btn-outline-light" onclick="window.location.href='/dashboard'">Back</button>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card text-bg-primary mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Total Downloads</h5>
+            <p class="card-text fs-2">{{ logs|length }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-bg-success mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Unique IPs</h5>
+            <p class="card-text fs-2">{{ unique_ips }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-bg-info mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Latest Download</h5>
+            <p class="card-text">{{ latest_download_time }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-striped table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+          <th>Date &amp; Time</th>
+          <th>IP Address</th>
+          <th>Hostname</th>
+          <th>OS Details</th>
+          <th>Machine Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.datetime.strftime('%Y-%m-%d %H:%M:%S') if log.datetime else 'N/A' }}</td>
+          <td>{{ log.ip }}</td>
+          <td>{{ log.hostname if log.hostname else 'Unknown' }}</td>
+          <td>
+            <span class="badge 
+              {% if 'windows' in log.os_name|lower %}os-badge-windows
+              {% elif 'ubuntu' in log.os_name|lower %}os-badge-linux
+              {% elif 'mac' in log.os_name|lower %}os-badge-mac
+              {% else %}bg-secondary{% endif %}">
+              {{ log.os_name }}
+            </span>
+          </td>
+          <td>{{ log.machine_type if log.machine_type else 'Unknown' }}</td>
+          <td>
+            <span class="badge 
+              {% if 'Active' in log.status %}bg-success
+              {% elif 'Inactive' in log.status %}bg-danger
+              {% else %}bg-secondary{% endif %}">
+              {{ log.status }}
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center">No downloads yet</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="bg-primary text-white text-center py-3">
+    &copy; 2025 Server Dashboard. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

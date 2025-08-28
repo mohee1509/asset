@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QS Agent Download Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .os-card { border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    .os-icon { font-size: 40px; margin-bottom: 15px; }
+    .steps-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    code { background-color: #f1f1f1; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">QS Agent Download Dashboard</h1>
+    <p class="text-muted">Choose your operating system to get started</p>
+    <a href="server_dashboard" class="btn btn-outline-danger btn-sm">Server Login</a>
+    <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+  </div>
+
+  <div class="row text-center mb-5">
+    <div class="col-md-4">
+      <div class="card os-card p-4">
+        <div class="os-icon text-primary">💻</div>
+        <h5>Windows</h5>
+        <p class="text-muted">Download the Windows Agent</p>
+        <button class="btn btn-primary" onclick="getLink('windows')">Download</button>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card os-card p-4">
+        <div class="os-icon text-success">🐧</div>
+        <h5>Ubuntu</h5>
+        <p class="text-muted">Download the Ubuntu Agent</p>
+        <button class="btn btn-success" onclick="getLink('ubuntu')">Download</button>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card os-card p-4">
+        <div class="os-icon text-secondary">🍎</div>
+        <h5>Mac</h5>
+        <p class="text-muted">Download the Mac Agent</p>
+        <button class="btn btn-secondary" onclick="getLink('mac')">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps-card">
+    <h4 class="mb-4">Steps to Get Started</h4>
+    <ol>
+      <li>Ensure you have <strong>Python 3.8+</strong> installed.</li>
+      <li>Install required dependencies:
+        <pre><code>pip install fastapi uvicorn psutil</code></pre>
+      </li>
+      <li>Download the agent for your OS from above.</li>
+      <li>Run the agent:
+        <pre><code>python agent_api.py</code></pre>
+      </li>
+      <li>Access the dashboard in your browser at: 
+        <code>http://127.0.0.1:8000</code>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<script>
+function getLink(osName) {
+  fetch('/get_link/' + osName)
+    .then(response => {
+      if (!response.ok) throw new Error("Error: " + response.statusText);
+      return response.json();
+    })
+    .then(data => {
+      window.location.href = data.url;
+    })
+    .catch(err => alert(err));
+}
+</script>
+
+</body>
+</html>

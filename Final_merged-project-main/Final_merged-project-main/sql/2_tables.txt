@@ -1,0 +1,27 @@
+CREATE DATABASE assetdb;
+-- Table for downloads tracking
+CREATE TABLE IF NOT EXISTS downloads (
+    id SERIAL PRIMARY KEY,
+    download_time TIMESTAMP NOT NULL DEFAULT NOW(),
+    ip_address TEXT NOT NULL UNIQUE,
+    hostname TEXT,
+    os_name TEXT
+);
+
+-- Table for latest asset details per hostname
+CREATE TABLE IF NOT EXISTS assets (
+    hostname TEXT PRIMARY KEY,
+    username TEXT,
+    os TEXT,
+    os_version TEXT,
+    cpu TEXT,
+    memory_gb DOUBLE PRECISION,
+    disk_gb DOUBLE PRECISION,
+    uptime_seconds BIGINT,
+    ip_addresses TEXT,
+    open_ports JSONB,
+    software TEXT,
+    vmware_vms JSONB,
+    ip_reporter TEXT,
+    collected_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
