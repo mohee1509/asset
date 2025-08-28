@@ -1,0 +1,3 @@
+ALTER TABLE downloads DROP CONSTRAINT downloads_ip_address_key;
+
+ALTER TABLE downloads ADD COLUMN machine_type TEXT DEFAULT 'Unknown';
